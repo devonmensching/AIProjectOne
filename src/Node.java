@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /*
  * Node.java 
  * The node class is designed to encapsulate all the information about 
@@ -8,9 +10,6 @@
  * by Devon Mensching & Nick Polanco 
  * 
  */
-
-import java.awt.List;
-import java.util.ArrayList;
 
 public class Node {
 	
@@ -32,43 +31,43 @@ public class Node {
 		this.puzzle = puzzle;
 	}
 	
-	// Sets the parent Node
+	// setParent( Node parent ) - sets the parent Node
 	public void setParent( Node parent )
 	{
 		this.parent = parent;
 	}
 	
-	// Returns the parent Node
+	// getParent( ) returns the parent Node
 	public Node getParent( )
 	{
 		return parent;
 	}
 	
-	// Sets the children Nodes
+	// ( ArrayList<Node> children ) - sets the children Nodes
 	public void setChildren( ArrayList<Node> children )
 	{
 		this.children = children;
 	}
 	
-	// Returns the children Nodes
+	// getChildren( ) - returns the children Nodes
 	public ArrayList<Node> getChildren( )
 	{
 		return children;
 	}
 	
-	// Sets the eight-puzzle
+	// setPuzzle( int[][] puzzle ) - sets the eight-puzzle
 	public void setPuzzle( int[][] puzzle )
 	{
 		this.puzzle = puzzle;
 	}
 	
-	// Returns the eight-puzzle
+	// getPuzzle( ) - returns the eight-puzzle
 	public int[][] getPuzzle( )
 	{
 		return puzzle;
 	}
 	
-	// Returns the empty position in the eight-puzzle
+	// findEmpty( ) - returns the empty position in the eight-puzzle
 	public int[] findEmpty( )
 	{
 		int[] position = new int[2];
@@ -87,7 +86,7 @@ public class Node {
 		return null;
 	}
 	
-	// Prints out the eight-puzzle
+	// printNode( ) - prints out the eight-puzzle
 	public void printNode( )
 	{
 		for( int i = 0; i < 3; i++ )
@@ -100,7 +99,7 @@ public class Node {
 		}
 	}
 	
-	// Create a child node where a piece is moved right
+	// moveRight( int x, int y ) - create a child node where a piece is moved right
 	public Node moveRight( int x, int y )
 	{
 		if( y < 2 )
@@ -123,7 +122,7 @@ public class Node {
 		return null;
 	}
 
-	// Create a child node where a piece is moved left
+	// moveLeft( int x, int y ) - create a child node where a piece is moved left
 	public Node moveLeft( int x, int y )
 	{
 		if( y > 0 )
@@ -145,7 +144,7 @@ public class Node {
 		return null;
 	}
 	
-	// Create a child node where a piece is moved up
+	// movUp( int x, int y ) - create a child node where a piece is moved up
 	public Node moveUp( int x, int y )
 	{
 		if( x > 0 )
@@ -167,56 +166,55 @@ public class Node {
 		return null;
 	}
 	
-	// Create a child node where a piece is moved down
-		public Node moveDown( int x, int y )
+	// MovDown( int x, int y ) -Create a child node where a piece is moved down
+	public Node moveDown( int x, int y )
+	{
+		if( x < 2 )
 		{
-			if( x < 2 )
+			int[][] newPuzzle = new int[3][3];
+			for( int i = 0; i < 3; i++ )
 			{
-				int[][] newPuzzle = new int[3][3];
-				for( int i = 0; i < 3; i++ )
+				for(int j = 0; j < 3; j++ )
 				{
-					for(int j = 0; j < 3; j++ )
-					{
-						newPuzzle[i][j] = puzzle[i][j];
-					}
+					newPuzzle[i][j] = puzzle[i][j];
 				}
-				int temp = newPuzzle[x][y];
-				newPuzzle[x][y] = newPuzzle[x+1][y];
-				newPuzzle[x+1][y] = temp;
-				Node newNode = new Node(this, newPuzzle);
-				return newNode;
 			}
-			return null;
+			int temp = newPuzzle[x][y];
+			newPuzzle[x][y] = newPuzzle[x+1][y];
+			newPuzzle[x+1][y] = temp;
+			Node newNode = new Node(this, newPuzzle);
+			return newNode;
 		}
+		return null;
+	}
 		
-		// findChildren( ) - returns an ArrayList of the children 
-		// of the node 
-		public ArrayList<Node> findChildren( )
+	// findChildren( ) - returns an ArrayList of the children of the node 
+	public ArrayList<Node> findChildren( )
+	{
+		ArrayList<Node> newChildren = new ArrayList<Node>();
+		int[] empty = findEmpty();
+		int x = empty[0];
+		int y = empty[1];
+		Node right = moveRight( x, y );
+		Node left = moveLeft( empty[0], empty[1] );
+		Node up = moveUp( empty[0], empty[1]);
+		Node down = moveDown( empty[0], empty[1]);
+		if( right != null )
 		{
-			ArrayList<Node> newChildren = new ArrayList<Node>();
-			int[] empty = findEmpty();
-			int x = empty[0];
-			int y = empty[1];
-			Node right = moveRight( x, y );
-			Node left = moveLeft( empty[0], empty[1] );
-			Node up = moveUp( empty[0], empty[1]);
-			Node down = moveDown( empty[0], empty[1]);
-			if( right != null )
-			{
-				newChildren.add( right );
-			}
-			if( left != null )
-			{
-				newChildren.add( left );
-			}
-			if( up != null )
-			{
-				newChildren.add( up );
-			}
-			if( down != null )
-			{
-				newChildren.add( down );
-			}
-			return newChildren;
+			newChildren.add( right );
 		}
+		if( left != null )
+		{
+			newChildren.add( left );
+		}
+		if( up != null )
+		{
+			newChildren.add( up );
+		}
+		if( down != null )
+		{
+			newChildren.add( down );
+		}
+		return newChildren;
+	}
 }

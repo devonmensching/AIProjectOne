@@ -123,6 +123,7 @@ public class State {
 			return false;
 	}
 	
+	// isEndNode( Node node ) - returns true if end node 
 	public boolean isEndNode( Node node)
 	{
 		int[][] end = new int[][]{{1,2,3},{8,0,4},{7,6,5}};
@@ -140,6 +141,7 @@ public class State {
 		return true;
 	}
 	
+	// isSameNode( Node nodeOne, Node nodeTwo ) - returns true if nodes are equal 
 	public boolean isSameNode( Node nodeOne, Node nodeTwo)
 	{
 		int[][] n1 = nodeOne.getPuzzle();
