@@ -16,12 +16,14 @@ public class Node {
 	private Node parent;
 	private ArrayList<Node> children;
 	private int[][] puzzle;
+	private int heuristic;
 	
 	public Node( int[][] puzzle )
 	{
 		this.parent = null;
 		this.children = null;
 		this.puzzle = puzzle;
+		this.heuristic = 0;
 	}
 	
 	public Node( Node parent, int[][] puzzle )
@@ -29,6 +31,15 @@ public class Node {
 		this.parent = parent;
 		this.children = null;
 		this.puzzle = puzzle;
+		this.heuristic = 0;
+	}
+	
+	public Node( Node parent, int[][] puzzle, int heuristic )
+	{
+		this.parent = parent;
+		this.children = null;
+		this.puzzle = puzzle;
+		this.heuristic = 0;
 	}
 	
 	// setParent( Node parent ) - sets the parent Node
@@ -65,6 +76,16 @@ public class Node {
 	public int[][] getPuzzle( )
 	{
 		return puzzle;
+	}
+	
+	public void setHeuristic( int heuristic)
+	{
+		this.heuristic = heuristic;
+	}
+	
+	public int getHeuristic( )
+	{
+		return heuristic;
 	}
 	
 	// findEmpty( ) - returns the empty position in the eight-puzzle
@@ -115,7 +136,7 @@ public class Node {
 			int temp = newPuzzle[x][y];
 			newPuzzle[x][y] = newPuzzle[x][y+1];
 			newPuzzle[x][y+1] = temp;
-			Node newNode = new Node(this, newPuzzle);
+			Node newNode = new Node(this, newPuzzle, calcuateHeuristic(newPuzzle));
 
 			return newNode;
 		}
@@ -138,7 +159,7 @@ public class Node {
 			int temp = newPuzzle[x][y];
 			newPuzzle[x][y] = newPuzzle[x][y-1];
 			newPuzzle[x][y-1] = temp;
-			Node newNode = new Node(this, newPuzzle);
+			Node newNode = new Node(this, newPuzzle, calcuateHeuristic(newPuzzle));
 			return newNode;
 		}
 		return null;
@@ -160,7 +181,7 @@ public class Node {
 			int temp = newPuzzle[x][y];
 			newPuzzle[x][y] = newPuzzle[x-1][y];
 			newPuzzle[x-1][y] = temp;
-			Node newNode = new Node(this, newPuzzle);
+			Node newNode = new Node(this, newPuzzle, calcuateHeuristic(newPuzzle));
 			return newNode;
 		}
 		return null;
@@ -182,7 +203,7 @@ public class Node {
 			int temp = newPuzzle[x][y];
 			newPuzzle[x][y] = newPuzzle[x+1][y];
 			newPuzzle[x+1][y] = temp;
-			Node newNode = new Node(this, newPuzzle);
+			Node newNode = new Node(this, newPuzzle, calcuateHeuristic(newPuzzle));
 			return newNode;
 		}
 		return null;
@@ -216,5 +237,25 @@ public class Node {
 			newChildren.add( down );
 		}
 		return newChildren;
+	}
+	
+	public int calcuateHeuristic( int[][] puzzle )
+	{
+		int[][] end = new int[][]{{1,2,3},{8,0,4},{7,6,5}};
+		
+		int count = 0;
+		
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				if( end[i][j] != puzzle[i][j] )
+				{
+					count++;
+				}
+			}
+		}
+		
+		return count;
 	}
 }

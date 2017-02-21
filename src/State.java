@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
 
 /*
  *State.java
@@ -18,7 +17,54 @@ public class State {
 	ArrayList<Node> open = new ArrayList<Node>();
 	ArrayList<Node> closed = new ArrayList<Node>();
 	ArrayList<Node> pathBFS = new ArrayList<Node>();
+	ArrayList<Node> pathIS = new ArrayList<Node>();
+	ArrayList<Node> openIS = new ArrayList<Node>();
+	ArrayList<Node> closedIS = new ArrayList<Node>();
 	int expandedNodesBFS = 0;
+	int expandedNodesIS = 0;
+
+	
+	public void calculateIS( Node startNode, Node endNode)
+	{
+		// Generate a set of possible start states called open
+		toOpenIS( startNode );
+		Node currentNode = open.get( 0 );
+
+		while( !isEndNode( currentNode ) && open.size() != 0 )
+		{
+			generateChildren( currentNode );
+			expandedNodesIS++;
+			
+			int smallest = openIS.get(0).getHeuristic();
+			int index = 0;
+			for(int i = 1; i < openIS.size(); i++)
+			{
+				int heuristic = openIS.get(i).getHeuristic();
+				if(heuristic < smallest)
+				{
+					smallest = heuristic; 
+					index = i;
+				}
+			}
+			
+			// Check if current node is a member of closed  
+			if( !isInClosed( currentNode ))
+			{
+				moveToClosed( currentNode );
+			}
+			
+			currentNode = openIS.get(index);
+		}
+
+		moveToClosed(currentNode);
+
+		findPathIS( startNode );
+		for(int i = pathIS.size()-1; i > -1; i--)
+		{
+			pathIS.get(i).printNode();
+			System.out.println();
+		}
+	}
 	
 	// calculateBFS( Node startNode, Node endNode ) - calculates BFS
 	public void calculateBFS( Node startNode, Node endNode )
@@ -69,6 +115,18 @@ public class State {
 		}
 	}
 
+	// generateChildren( Node node ) - adds children of node to open
+	public void generateChildrenIS( Node node )
+	{
+		ArrayList<Node> children = node.findChildren();
+		while( children.size() != 0 )
+		{
+			Node addChild = children.get( 0 );
+			openIS.add( addChild );
+			children.remove( 0 );
+		}
+	}
+		
 	// findPath( Node start ) - finds the path from start node to end node
 	public void findPath( Node startNode )
 	{
@@ -83,6 +141,20 @@ public class State {
 		}
 	}
 	
+	// findPath( Node start ) - finds the path from start node to end node
+		public void findPathIS( Node startNode )
+		{
+			Node currentNode = closed.get( closed.size() - 1 );
+			pathIS.add(currentNode);
+			
+			while( !isSameNode(startNode, currentNode ) )
+			{
+				Node parent = currentNode.getParent();
+				pathIS.add(parent);
+				currentNode = parent;
+			}
+		}
+	
 	// toOpen( Node n ) - adds n to open
 	public void toOpen( Node n )
 	{
@@ -94,6 +166,18 @@ public class State {
 	{
 
 		closed.add( n );
+	}
+	
+	// toOpenIS( Node n ) - adds n to openIS
+	public void toOpenIS( Node n )
+	{
+		openIS.add( n );
+	}
+		
+	// moveToClosed( Node n ) - adds n to closedIS
+	public void moveToClosedIS( Node n )
+	{
+		closedIS.add( n );
 	}
 	
 	// isOpenEmpty( ) - returns true of open is empty
