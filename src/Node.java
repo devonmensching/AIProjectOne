@@ -39,7 +39,7 @@ public class Node {
 		this.parent = parent;
 		this.children = null;
 		this.puzzle = puzzle;
-		this.heuristic = 0;
+		this.heuristic = heuristic;
 	}
 	
 	// setParent( Node parent ) - sets the parent Node
@@ -137,7 +137,6 @@ public class Node {
 			newPuzzle[x][y] = newPuzzle[x][y+1];
 			newPuzzle[x][y+1] = temp;
 			Node newNode = new Node(this, newPuzzle, calcuateHeuristic(newPuzzle));
-
 			return newNode;
 		}
 		return null;
@@ -251,11 +250,13 @@ public class Node {
 			{
 				if( end[i][j] != puzzle[i][j] )
 				{
-					count++;
+					if(end[i][j] != 0)
+					{
+						count++;
+					}
 				}
 			}
 		}
-		
 		return count;
 	}
 }

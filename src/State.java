@@ -28,35 +28,44 @@ public class State {
 	{
 		// Generate a set of possible start states called open
 		toOpenIS( startNode );
-		Node currentNode = open.get( 0 );
-
-		while( !isEndNode( currentNode ) && open.size() != 0 )
+		Node currentNode = openIS.get( 0 );
+		
+		while( !isEndNode( currentNode ) && openIS.size() != 0 )
 		{
-			generateChildren( currentNode );
+			generateChildrenIS( currentNode );
 			expandedNodesIS++;
+
+			// Check if current node is a member of closed  
+			if( !isInClosedIS( currentNode ))
+			{
+				moveToClosedIS( currentNode );
+			}
+
+			openIS.remove( currentNode );
 			
-			int smallest = openIS.get(0).getHeuristic();
-			int index = 0;
+			int smallest = openIS.get(1).getHeuristic();
+			Node nextNode = openIS.get(1);
 			for(int i = 1; i < openIS.size(); i++)
 			{
 				int heuristic = openIS.get(i).getHeuristic();
 				if(heuristic < smallest)
 				{
 					smallest = heuristic; 
-					index = i;
+					nextNode = openIS.get(i);
 				}
 			}
 			
 			// Check if current node is a member of closed  
-			if( !isInClosed( currentNode ))
-			{
-				moveToClosed( currentNode );
-			}
-			
-			currentNode = openIS.get(index);
+			//if( !isInClosedIS( currentNode ))
+			//{
+				//moveToClosedIS( currentNode );
+			//}
+
+			//openIS.remove( currentNode );
+			currentNode = nextNode;
 		}
 
-		moveToClosed(currentNode);
+		moveToClosedIS(currentNode);
 
 		findPathIS( startNode );
 		for(int i = pathIS.size()-1; i > -1; i--)
@@ -207,6 +216,19 @@ public class State {
 			return false;
 	}
 	
+	// isInClosed( Node node ) - returns true if node is in closed  
+	public boolean isInClosedIS( Node node )
+	{
+		for( int i=0; i < closedIS.size(); i++ )
+		{
+			if( Arrays.equals( closedIS.get( i ).getPuzzle() , node.getPuzzle() ))
+			{
+				return true;
+			}
+		}
+			return false;
+	}
+	
 	// isEndNode( Node node ) - returns true if end node 
 	public boolean isEndNode( Node node)
 	{
@@ -255,4 +277,15 @@ public class State {
 		return expandedNodesBFS;
 	}
 	
+	// getPathNumber() -  returns the number of steps needed to take along the path 
+	public int getPathNumberIS( )
+	{
+		return pathIS.size();
+	}
+		
+	// getExpandedNodesBFS() -  returns the number of nodes expanded for BFS
+	public int getExpandedNodesIS()
+	{
+		return expandedNodesIS;
+	}
 }

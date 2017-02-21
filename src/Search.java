@@ -93,6 +93,17 @@ public class Search {
 		
 		System.out.println("Best First Search: ");
 		s.calculateIS(startNode, endNode);
+		System.out.println("----------------------------------------------------------");
+		
+		// Print the number of steps needed to take along the path 
+		System.out.println("The number of steps needed to take along the path is: " + s.getExpandedNodesIS());
+		System.out.println("----------------------------------------------------------");
+				
+				
+		// Print the total number of nodes expanded while doing the search 
+		System.out.println("The total number of nodes exapnded during the search is: " + s.getExpandedNodesIS());
+		System.out.println("----------------------------------------------------------");
+				
 		
 	}
 }
